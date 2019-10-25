@@ -9,8 +9,9 @@ output: github_document
 ```{r setup}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(tidyverse)
+library(tidyverse) # R packages for data science
 library(readxl) # Read Excel Files
+library(scales) # Scale Functions for Visualization
 ```
 
 ```{r file_donwload}
@@ -23,6 +24,22 @@ url <- "ftp://ftp.ibge.gov.br/Projecao_da_Populacao/Projecao_da_Populacao_2018/p
 ```
 
 ```{r function}
+absolute_format <- function(accuracy = 1, scale = 1, prefix = "",
+                          suffix = "", big.mark = ".", decimal.mark = ",",
+                          trim = TRUE, ...) {
+  function(x) number(
+      abs(x),
+      accuracy = accuracy,
+      scale = scale,
+      prefix = prefix,
+      suffix = suffix,
+      big.mark = big.mark,
+      decimal.mark = decimal.mark,
+      trim = trim,
+      ...
+    )
+}
+
 plot_pyramid <- function(estado) {
   homens <- read_xls(path = "projecoes_2018_populacao_2010_2060.xls",
                      sheet = estado,
@@ -57,13 +74,14 @@ plot_pyramid <- function(estado) {
     geom_col(data = homens2, aes(y = -populacao, fill = "Homens")) +
     geom_col(data = mulheres2, aes(fill = "Mulheres")) +
     coord_flip() +
+    scale_y_continuous(labels = absolute_format(scale = 10^-3, suffix = " mil")) +
     facet_wrap("ano") +
     ggtitle(estado)
   )
 }
 ```
 
-```{r plot}
+```{r plot, fig.height=10, fig.width=15}
 sheets <- excel_sheets("projecoes_2018_populacao_2010_2060.xls")[-1]
 
 walk(sheets, plot_pyramid)
