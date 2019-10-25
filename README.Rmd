@@ -76,6 +76,8 @@ plot_pyramid <- function(estado) {
     coord_flip() +
     scale_y_continuous(labels = absolute_format(scale = 10^-3, suffix = " mil")) +
     facet_wrap("ano") +
+    scale_fill_manual(name = "", values = c(Homens = "#3E606F", Mulheres = "#8C3F4D"),
+                 labels = c("Homens", "Mulheres")) +
     ggtitle(estado)
   )
 }

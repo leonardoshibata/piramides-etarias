@@ -10,14 +10,14 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse) # R packages for data science
 ```
 
-    ## -- Attaching packages ------------------------------------------------------------------------- tidyverse 1.2.1 --
+    ## -- Attaching packages --------------------------------------------------- tidyverse 1.2.1 --
 
     ## v ggplot2 3.2.1          v purrr   0.3.2     
     ## v tibble  2.1.3          v dplyr   0.8.3     
     ## v tidyr   1.0.0          v stringr 1.4.0     
     ## v readr   1.3.1.9000     v forcats 0.4.0
 
-    ## -- Conflicts ---------------------------------------------------------------------------- tidyverse_conflicts() --
+    ## -- Conflicts ------------------------------------------------------ tidyverse_conflicts() --
     ## x dplyr::filter() masks stats::filter()
     ## x dplyr::lag()    masks stats::lag()
 
@@ -99,6 +99,8 @@ plot_pyramid <- function(estado) {
     coord_flip() +
     scale_y_continuous(labels = absolute_format(scale = 10^-3, suffix = " mil")) +
     facet_wrap("ano") +
+    scale_fill_manual(name = "", values = c(Homens = "#3E606F", Mulheres = "#8C3F4D"),
+                 labels = c("Homens", "Mulheres")) +
     ggtitle(estado)
   )
 }
