@@ -6,7 +6,7 @@ date: "23/10/2019"
 output: github_document
 ---
 
-```{r setup}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse) # R packages for data science
@@ -14,7 +14,7 @@ library(readxl) # Read Excel Files
 library(scales) # Scale Functions for Visualization
 ```
 
-```{r file_donwload}
+```{r file_donwload, include=FALSE}
 # Download projeção da população
 if (file.exists("projecoes_2018_populacao_2010_2060.xls") == FALSE) {
 url <- "ftp://ftp.ibge.gov.br/Projecao_da_Populacao/Projecao_da_Populacao_2018/projecoes_2018_populacao_2010_2060.xls"
@@ -23,7 +23,7 @@ url <- "ftp://ftp.ibge.gov.br/Projecao_da_Populacao/Projecao_da_Populacao_2018/p
 }
 ```
 
-```{r function}
+```{r function, include=FALSE}
 absolute_format <- function(accuracy = 1, scale = 1, prefix = "",
                           suffix = "", big.mark = ".", decimal.mark = ",",
                           trim = TRUE, ...) {
