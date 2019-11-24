@@ -9,25 +9,30 @@ output: github_document
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-library(tidyverse) # R packages for data science
-library(readxl) # Read Excel Files
-library(scales) # Scale Functions for Visualization
+
+# install and load required packages
+if(!require(pacman)) install.packages("pacman")
+pacman::p_load(tidyverse)
+pacman::p_load(readxl)
+pacman::p_load_gh("krlmlr/here")
 ```
 
-```{r file_donwload, include=FALSE}
+
+```{r data_download, include=FALSE}
 # Download projeção da população
-if (file.exists("projecoes_2018_populacao_2010_2060.xls") == FALSE) {
-url <- "ftp://ftp.ibge.gov.br/Projecao_da_Populacao/Projecao_da_Populacao_2018/projecoes_2018_populacao_2010_2060.xls"
-  download.file(url, destfile = "projecoes_2018_populacao_2010_2060.xls",
+if (file.exists(here("data", "projecoes_2018_populacao_2010_2060.xls")) == FALSE) {
+  url <- "ftp://ftp.ibge.gov.br/Projecao_da_Populacao/Projecao_da_Populacao_2018/projecoes_2018_populacao_2010_2060.xls"
+  download.file(url, destfile = here("data", "projecoes_2018_populacao_2010_2060.xls"),
                 mode = "wb")
 }
 ```
 
-```{r function, include=FALSE}
+
+```{r functions, include=FALSE}
 absolute_format <- function(accuracy = 1, scale = 1, prefix = "",
                           suffix = "", big.mark = ".", decimal.mark = ",",
                           trim = TRUE, ...) {
-  function(x) number(
+  function(x) scales::number(
       abs(x),
       accuracy = accuracy,
       scale = scale,
@@ -41,11 +46,11 @@ absolute_format <- function(accuracy = 1, scale = 1, prefix = "",
 }
 
 plot_pyramid <- function(estado) {
-  homens <- read_xls(path = "projecoes_2018_populacao_2010_2060.xls",
+  homens <- read_xls(path = here("data", "projecoes_2018_populacao_2010_2060.xls"),
                      sheet = estado,
                      range = "A5:AZ25")
   
-  mulheres <- read_xls(path = "projecoes_2018_populacao_2010_2060.xls",
+  mulheres <- read_xls(path = here("data", "projecoes_2018_populacao_2010_2060.xls"),
                        sheet = estado,
                        range = "A28:AZ48")
   
@@ -83,8 +88,9 @@ plot_pyramid <- function(estado) {
 }
 ```
 
+
 ```{r plot, fig.height=10, fig.width=15}
-sheets <- excel_sheets("projecoes_2018_populacao_2010_2060.xls")[-1]
+sheets <- excel_sheets(here("data", "projecoes_2018_populacao_2010_2060.xls"))[-1]
 
 walk(sheets, plot_pyramid)
 ```
