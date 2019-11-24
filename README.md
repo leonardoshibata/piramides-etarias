@@ -5,7 +5,7 @@ Leonardo Goes Shibata
 23/10/2019
 
 ``` r
-sheets <- excel_sheets("projecoes_2018_populacao_2010_2060.xls")[-1]
+sheets <- excel_sheets(here("data", "projecoes_2018_populacao_2010_2060.xls"))[-1]
 
 walk(sheets, plot_pyramid)
 ```
