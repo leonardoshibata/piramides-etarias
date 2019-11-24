@@ -46,15 +46,15 @@ absolute_format <- function(accuracy = 1, scale = 1, prefix = "",
 }
 
 plot_pyramid <- function(estado) {
-  homens <- read_xls(path = here("data", "projecoes_2018_populacao_2010_2060.xls"),
+  homens_raw <- read_xls(path = here("data", "projecoes_2018_populacao_2010_2060.xls"),
                      sheet = estado,
                      range = "A5:AZ25")
   
-  mulheres <- read_xls(path = here("data", "projecoes_2018_populacao_2010_2060.xls"),
+  mulheres_raw <- read_xls(path = here("data", "projecoes_2018_populacao_2010_2060.xls"),
                        sheet = estado,
                        range = "A28:AZ48")
   
-  homens2 <- homens %>%
+  homens_tidy <- homens_raw %>%
     pivot_longer(cols = -1, # all but the first
                  names_to = "ano",
                  values_to = "populacao") %>%
@@ -64,7 +64,7 @@ plot_pyramid <- function(estado) {
                                  levels = unique(`GRUPO ETÁRIO`),
                                  ordered = TRUE))
   
-  mulheres2 <- mulheres %>%
+  mulheres_tidy <- mulheres_raw %>%
     pivot_longer(cols = -1, # all but the first
                  names_to = "ano",
                  values_to = "populacao") %>%
@@ -75,15 +75,19 @@ plot_pyramid <- function(estado) {
                                  ordered = TRUE))
   
   print(
-    ggplot(data = homens2, aes(x = faixa_etaria, y = populacao)) +
-    geom_col(data = homens2, aes(y = -populacao, fill = "Homens")) +
-    geom_col(data = mulheres2, aes(fill = "Mulheres")) +
-    coord_flip() +
-    scale_y_continuous(labels = absolute_format(scale = 10^-3, suffix = " mil")) +
-    facet_wrap("ano") +
-    scale_fill_manual(name = "", values = c(Homens = "#3E606F", Mulheres = "#8C3F4D"),
-                 labels = c("Homens", "Mulheres")) +
-    ggtitle(estado)
+    ggplot(data = homens_tidy, aes(x = faixa_etaria, y = populacao)) +
+      geom_col(data = homens_tidy, aes(y = -populacao, fill = "Homens")) +
+      geom_col(data = mulheres_tidy, aes(fill = "Mulheres")) +
+      coord_flip() +
+      scale_y_continuous(labels = absolute_format(scale = 10 ^ -3, suffix = " mil")) +
+      facet_wrap("ano") +
+      scale_fill_manual(
+        name = "",
+        values = c(Homens = "#3E606F", Mulheres = "#8C3F4D"),
+        labels = c("Homens", "Mulheres")
+      ) +
+      labs(x = "Faixa Etária", y = "População") +
+      ggtitle(estado)
   )
 }
 ```
@@ -94,5 +98,4 @@ sheets <- excel_sheets(here("data", "projecoes_2018_populacao_2010_2060.xls"))[-
 
 walk(sheets, plot_pyramid)
 ```
-
 
